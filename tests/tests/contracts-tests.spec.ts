@@ -33,9 +33,9 @@ test.describe('Базовый сценарий работы в разделе Д
 
     test('Создание контракта', async() => {
 
-        // await main.createProject();
-        // await main.createHouse();
-        // await main.createProperty();
+        await main.createProject();
+        await main.createHouse();
+        await main.createProperty();
         await orders.getOrderByPropertyId();
         await orders.createContract();
 
