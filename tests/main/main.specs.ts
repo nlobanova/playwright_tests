@@ -2,10 +2,11 @@ import { Page, APIRequestContext, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config(); // аналогично дубль
 
+// можешь не переделывать, т.к. уже реализовано в основной репе, комменты пишу для твоего понимания
 export class MainAPI {
-    readonly page: Page;
+    readonly page: Page; // советую явно прописывать модификаторы доступа public/private/protected
     readonly request: APIRequestContext;
   
     constructor(page: Page, request: APIRequestContext) {
@@ -27,13 +28,13 @@ export class MainAPI {
   
       const authenticationResponse = await getAuthentication.json();
       const accessToken = authenticationResponse.access_token;
-      return(accessToken);
+      return(accessToken); // а зачем ()?
     };
 
     public async createProject(): Promise<void>{
       const accessToken = await this.getAccessToken();
-      const createdProjectRequest = await this.request.post(`/api/v4/json/projects?access_token=`+accessToken, {
-        data: {
+      const createdProjectRequest = await this.request.post(`/api/v4/json/projects?access_token=`+accessToken, { // ты же используешь обратный ковычки туда сразу можно подставить переменную `...access_token=${accessToken}`
+        data: { // хардкорд, да лучше прокидывать из теста
           "title": "AUTOTEST Счастье",
           "type": "complex",
           "currency": "RUB"
@@ -48,7 +49,7 @@ export class MainAPI {
         "projectId": createdProjectResponse.id
       }  
 
-      fs.readFile('./tests/testsData.json', 'utf8', (err, fileContent) => {
+      fs.readFile('./tests/testsData.json', 'utf8', (err, fileContent) => { // подход с файлом интересный, но уязвимый + в последствии тебе нужно будет очень много сущностей и лучше возвращать конкретные сущности из API методов в сам тест
         if (err) {
           console.error('Ошибка чтения файла:', err);
           return;
@@ -79,7 +80,7 @@ export class MainAPI {
 
       const accessToken = await this.getAccessToken();
       
-      interface project {
+      interface project { // лучше выносить отдельно (либо в другой файл или под классом) + название с большой буквы и начинать с I "IProject"
         projectId: string;
       }
 

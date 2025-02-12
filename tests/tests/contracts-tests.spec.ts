@@ -1,12 +1,12 @@
 import { test, expect, _electron, BrowserContext, APIRequestContext} from "@playwright/test";
-import { ContractsPage } from '../contracts/contracts-page.specs';
+import { ContractsPage } from '../contracts/contracts-page.specs'; 
 import { OrdersAPI } from '../master-deals/orders.specs';
 import { MainAPI } from '../main/main.specs';
 import { Ecosystem } from "../ecosystem/ecosystem.specs";
 import { Auth } from "../auth/auth";
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config(); // у тебя же уже в PW конфиге есть
 
 test.describe('Базовый сценарий работы в разделе Документы', async () => {
     
@@ -30,7 +30,7 @@ test.describe('Базовый сценарий работы в разделе Д
         await contracts.openContractsPage();
 
     });
-
+    // тесты зависят друг - плохо, падает создание - падают все. Если пока решила не параллелить, то лучше огранить воркеры в конфиге или дескрайбеы
     test('Создание контракта', async() => {
 
         await main.createProject();
@@ -38,16 +38,16 @@ test.describe('Базовый сценарий работы в разделе Д
         await main.createProperty();
         await orders.getOrderByPropertyId();
         await orders.createContract();
-
+        // не хватает какой-то валидации появления договора на странице
     });
 
     test('Поиск контракта', async() => {
 
-        await contracts.searchContract('AUTOTEST Контракт');
+        await contracts.searchContract('AUTOTEST Контракт'); // вынести в какую-нибудь константу если хардкод
         const contractsTitleList = await contracts.getListFromPage('title');
         expect(contractsTitleList.length).toBeGreaterThan(0);
-        expect(contractsTitleList.every(item => /AUTOTEST Контракт/i.test(item))).toBe(true);
-
+        expect(contractsTitleList.every(item => /AUTOTEST Контракт/i.test(item))).toBe(true); // классная проверка, но думаю, что стоит генерить уникальное название при создании и проверять множественный поиск и одиночный
+        // не хватает проверки, что именно созданный в тесте контракт отображается
     });
 
     test('Фильтрация контрактов по текущему пользователю', async() => {
@@ -57,13 +57,13 @@ test.describe('Базовый сценарий работы в разделе Д
         const contractsOwnerList = await contracts.getListFromPage('user');
         expect(contractsOwnerList.length).toBeGreaterThan(0);
         expect(contractsOwnerList.every(item => item.includes(currentNameUser))).toBe(true);
-
+      // не хватает проверки, что именно созданный в тесте контракт отображается
     });
 
 
     test('Сортировка контрактов по дате', async () => {
 
-        let listTitleFromResponse: string[];
+        let listTitleFromResponse: string[]; // можно не делать общие переменные, ты же всегда новые в степах получаешь
         let listTitleFromPage: string[];
 
         await test.step('Сортировка по дате изменения (сначала старые)', async () => {
@@ -95,7 +95,7 @@ test.describe('Базовый сценарий работы в разделе Д
         await contracts.searchContract('AUTOTEST Контракт');
         await contracts.deleteContract();
         await contracts.searchContract('AUTOTEST Контракт')
-        await expect(page.locator('pb-contract-card')).toHaveCount(0);
+        await expect(page.locator('pb-contract-card')).toHaveCount(0); // лучше toBeHidden()
 
     });
 
