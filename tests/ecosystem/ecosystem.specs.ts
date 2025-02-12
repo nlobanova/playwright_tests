@@ -1,5 +1,6 @@
 import { type Locator, type Page, expect, BrowserContext } from '@playwright/test';
 import * as fs from 'fs';
+// есть в основной репе, можно не править
 
 export class Ecosystem {
     
@@ -56,9 +57,9 @@ export class Ecosystem {
     };
 
 
-    public async changeLanguage() {
-      await this.page.locator('pb-language').click();
-      await this.page.getByText('Русский').click();
+    public async changeLanguage() { // что возвращает
+      await this.page.locator('pb-language').click(); 
+      await this.page.getByText('Русский').click(); // привязка к тексту
     };
 
 };

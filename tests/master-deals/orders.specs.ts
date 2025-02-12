@@ -1,7 +1,7 @@
 import { type Page, APIRequestContext, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-
+// можно не переделывать, добавим в основной репе
 dotenv.config();
 
 export class OrdersAPI {
